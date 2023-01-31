@@ -1,11 +1,11 @@
-typedef struct pedido
+typedef struct Pedido
 {
     char *v;
     int top;
     int size;
-} pedido;
+} Pedido;
 
-void init(pedido *s, int size);
-void push(pedido *s, char ingrediente);
-char pop(pedido *s);
-void print(pedido *s);
+void initializeStack(Pedido *s, int size);
+void push(Pedido *s, char ingrediente);
+char pop(Pedido *s);
+void printStack(Pedido *s);

@@ -18,8 +18,8 @@ int main()
     initializeQueue(q, 2);
     adicionarPedido(q, 1); // x-burger
 
-    pedido *p = malloc(sizeof(pedido));
-    init(p, 7);
+    Pedido *p = malloc(sizeof(Pedido));
+    initializeStack(p, 7);
 
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
@@ -44,7 +44,7 @@ int main()
     {
         system("clear"); // clear screen
         printMap(map);
-        print(p);
+        printStack(p);
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();
 

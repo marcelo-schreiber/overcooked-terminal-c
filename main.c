@@ -12,7 +12,6 @@
 
 int main()
 {
-    int c;
     static struct termios oldt, newt;
     Cliente *q = malloc(sizeof(Cliente));
     initializeQueue(q, 2);
@@ -45,9 +44,10 @@ int main()
         system("clear"); // clear screen
         printMap(map);
         printStack(p);
+
+        // set terminal to new settings
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();
-
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
 
         int row, col;

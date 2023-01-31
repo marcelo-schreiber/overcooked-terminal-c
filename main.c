@@ -48,16 +48,10 @@ int main()
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();
 
-        // restore old settings
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
 
         int row, col;
         findChar(map, '&', &row, &col);
-
-        // add ingredient if colliding
-        ingredient = isGettingIngredient(map, col, row);
-        if (ingredient != ' ')
-            push(p, ingredient);
 
         // move player
         switch (move)
@@ -89,6 +83,15 @@ int main()
         default:
             break;
         }
+
+        // collision
+        ingredient = isGettingIngredient(map, col, row);
+
+        // add or remove ingredient from stack
+        if (ingredient == 'o')
+            pop(p);
+        else if (ingredient != ' ')
+            push(p, ingredient);
     }
 
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);

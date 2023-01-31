@@ -18,9 +18,12 @@ void push(Pedido *s, char ingrediente)
 
 char pop(Pedido *s)
 {
-    char ingrediente = s->v[s->size - 1];
-    s->size--;
-    return ingrediente;
+    if (s->size != 0)
+    {
+        char ingrediente = s->v[s->size - 1];
+        s->size--;
+        return ingrediente;
+    }
 }
 
 // print stack

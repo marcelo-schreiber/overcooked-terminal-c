@@ -5,6 +5,7 @@
 // print map function
 void printMap(char map[6][21])
 {
+    system("clear");
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 21; j++)

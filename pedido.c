@@ -24,6 +24,7 @@ char pop(Pedido *s)
         s->size--;
         return ingrediente;
     }
+    return ' ';
 }
 
 // print stack

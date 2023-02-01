@@ -14,7 +14,6 @@
 
 int main()
 {
-    int c;
     static struct termios oldt, newt;
     Cliente *q = malloc(sizeof(Cliente));
     initializeQueue(q, 2);

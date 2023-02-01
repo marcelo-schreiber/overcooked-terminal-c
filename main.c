@@ -36,11 +36,11 @@ int main()
         "|[p] [H] [Q] [S] [P]|",
         "#-------------------#"};
 
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
     char quitted = printMainMenu() == 'q';
     if (quitted)
     {
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings before quitting
         return 0;
     }
 
@@ -52,11 +52,11 @@ int main()
     {
         system("clear"); // clear screen
         printMap(map);
-        printStack(p);
+        printStack(p); // prints current ingredients
+
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();
-
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore
 
         int row, col;
         findChar(map, '&', &row, &col);
@@ -102,6 +102,6 @@ int main()
             push(p, ingredient);
     }
 
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore to old settings before quitting
     return 0;
 }

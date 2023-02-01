@@ -5,6 +5,7 @@ int check(char position)
     return 0;
 }
 
+// returns the ingredient that the player is next to or blank space if none
 char isGettingIngredient(char map[6][21], int playerX, int playerY)
 {
     char up, down, left, right;

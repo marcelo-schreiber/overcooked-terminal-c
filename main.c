@@ -5,6 +5,7 @@
 #include "maputils.h"
 #include "cliente.h"
 #include "collision.h"
+#include "mainmenu.h"
 
 // terminal utils
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
@@ -36,6 +37,7 @@ int main()
         "#-------------------#"};
 
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    printMainMenu();
     printMap(map);
     char move = getchar();
     char ingredient = ' ';

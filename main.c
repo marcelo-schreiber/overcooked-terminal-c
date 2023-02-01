@@ -6,6 +6,7 @@
 #include "cliente.h"
 #include "collision.h"
 #include "mainmenu.h"
+#include "moveplayer.h"
 
 // terminal utils
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
@@ -55,42 +56,12 @@ int main()
         printStack(p); // prints current ingredients
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-        move = getchar();
+        move = getchar();                        // get next move
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore
 
         int row, col;
         findChar(map, '&', &row, &col);
-
-        // move player
-        switch (move)
-        {
-        case 'w':
-            if (map[row - 1][col] != ' ')
-                break;
-            map[row][col] = ' ';
-            map[row - 1][col] = '&';
-            break;
-        case 'a':
-            if (map[row][col - 1] != ' ')
-                break;
-            map[row][col] = ' ';
-            map[row][col - 1] = '&';
-            break;
-        case 's':
-            if (map[row + 1][col] != ' ')
-                break;
-            map[row][col] = ' ';
-            map[row + 1][col] = '&';
-            break;
-        case 'd':
-            if (map[row][col + 1] != ' ')
-                break;
-            map[row][col] = ' ';
-            map[row][col + 1] = '&';
-            break;
-        default:
-            break;
-        }
+        movePlayer(map, row, col, move);
 
         // collision
         ingredient = isGettingIngredient(map, col, row);

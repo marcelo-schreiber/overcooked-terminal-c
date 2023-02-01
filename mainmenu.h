@@ -1,1 +1,1 @@
-void printMainMenu();
+char printMainMenu();

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "mainmenu.h"
 
-void printMainMenu()
+char printMainMenu()
 {
     system("clear");
     printf(" _______           _______  _______  _______  _______  _______  _        _______  ______  \n");
@@ -13,7 +13,9 @@ void printMainMenu()
     printf("| |   | | \\ \\_/ / | (      | (\\ (   | |      | |   | || |   | ||  ( \\ \\ | (      | |   ) |\n");
     printf("| (___) |  \\   /  | (____/\\| ) \\ \\__| (____/\\| (___) || (___) ||  /  \\ \\| (____/\\| (__/  )\n");
     printf("(_______)   \\_/   (_______/|/   \\__/(_______/(_______)(_______)|_/    \\/(_______/(______/ \n\n");
-    printf("Bem-vindo, pressione qualquer tecla para continuar...\n");
-    getchar();
+    printf("Bem-vindo, pressione qualquer tecla para continuar ou 'q' para sair...\n");
+    char pressed = getchar();
     system("clear");
+
+    return pressed;
 }

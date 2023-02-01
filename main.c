@@ -37,7 +37,13 @@ int main()
         "#-------------------#"};
 
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    printMainMenu();
+    char quitted = printMainMenu() == 'q';
+    if (quitted)
+    {
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
+        return 0;
+    }
+
     printMap(map);
     char move = getchar();
     char ingredient = ' ';

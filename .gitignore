@@ -1,5 +1,7 @@
 .vscode
 main
+objects
+overcooked
 game
 a.out
 *.o

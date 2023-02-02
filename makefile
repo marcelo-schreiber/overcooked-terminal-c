@@ -1,34 +1,42 @@
-parametrosCompilacao=-Wall \
-										 -lm \
- 										 -pthread
-#-Wshadow
-nomePrograma=game
-
-all: $(nomePrograma)
-
-$(nomePrograma): main.o cliente.o collision.o mainmenu.o maputils.o moveplayer.o pedido.o
-	gcc -o $(nomePrograma) main.o cliente.o collision.o mainmenu.o maputils.o moveplayer.o pedido.o $(parametrosCompilacao)
-
-main.o: main.c
-	gcc -c main.c $(parametrosCompilacao)
-
-cliente.o: cliente.c
-	gcc -c cliente.c $(parametrosCompilacao)
-
-collision.o: collision.c
-	gcc -c collision.c $(parametrosCompilacao)
-
-mainmenu.o: mainmenu.c
-	gcc -c mainmenu.c $(parametrosCompilacao)
-
-maputils.o: maputils.c
-	gcc -c maputils.c $(parametrosCompilacao)
-
-moveplayer.o: moveplayer.c
-	gcc -c moveplayer.c $(parametrosCompilacao)
-
-pedido.o: pedido.c
-	gcc -c pedido.c $(parametrosCompilacao)
-
+PROJ_NAME=overcooked
+ 
+# .c files
+C_SOURCE=$(wildcard ./src/*.c)
+ 
+# .h files
+H_SOURCE=$(wildcard ./include/*.h)
+ 
+# Object files
+OBJ=$(subst .c,.o,$(subst src,objects,$(C_SOURCE)))
+ 
+# Compiler and linker
+CC=gcc
+ 
+# Flags for compiler
+CC_FLAGS=-c         \
+         -Wall      \
+         -lm      \
+		 -pthread
+ 
+# Command used at clean target
+RM = rm -rf
+ 
+# Compilation and linking
+all: objFolder $(PROJ_NAME)
+ 
+$(PROJ_NAME): $(OBJ)
+	$(CC) $^ -o $@ -lm
+ 
+./objects/%.o: ./src/%.c ./include/%.h
+	$(CC) $< $(CC_FLAGS) -o $@ -lm
+ 
+./objects/main.o: ./src/main.c $(H_SOURCE)
+	$(CC) $< $(CC_FLAGS) -o $@ -lm
+ 
+objFolder:
+	@mkdir -p objects
+ 
 clean:
-	rm -f *.o *.gch $(nomePrograma)
+	$(RM) ./objects/*.o $(PROJ_NAME) *~
+ 
+.PHONY: all clean

@@ -16,8 +16,8 @@ CC=gcc
 CC_FLAGS=-c         \
          -Wall      \
          -lm      \
-					-pthread \
-					-finput-charset=UTF-8
+		 -pthread \
+		 -finput-charset=UTF-8
  
 # Command used at clean target
 RM = rm -rf
@@ -26,13 +26,13 @@ RM = rm -rf
 all: objFolder $(PROJ_NAME)
  
 $(PROJ_NAME): $(OBJ)
-	$(CC) $^ -o $@ -lm
+	$(CC) $^ -o $@ -lm -lpthread
  
 ./objects/%.o: ./src/%.c ./include/%.h
-	$(CC) $< $(CC_FLAGS) -o $@ -lm
+	$(CC) $< $(CC_FLAGS) -o $@ -lm -lpthread
  
 ./objects/main.o: ./src/main.c $(H_SOURCE)
-	$(CC) $< $(CC_FLAGS) -o $@ -lm
+	$(CC) $< $(CC_FLAGS) -o $@ -lm -lpthread
  
 objFolder:
 	@mkdir -p objects

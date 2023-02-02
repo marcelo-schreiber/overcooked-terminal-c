@@ -16,7 +16,8 @@ CC=gcc
 CC_FLAGS=-c         \
          -Wall      \
          -lm      \
-		 -pthread
+					-pthread \
+					-finput-charset=UTF-8
  
 # Command used at clean target
 RM = rm -rf

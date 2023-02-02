@@ -10,7 +10,26 @@ void printMap(char map[MAP_HEIGHT][MAP_WIDTH])
     {
         for (int j = 0; j < MAP_WIDTH; j++)
         {
-            printf("%c", map[i][j]);
+            switch (map[i][j]) // print different characters that occupy 2 bits instead of 1 bit, to prevent variable array size
+            {
+            case '#':
+                printf("┼");
+                break;
+            case '|':
+                printf("│");
+                break;
+            case '-':
+                printf("─");
+                break;
+            case '@':
+                printf("»");
+                break;
+            case 'o':
+                printf("Ø");
+                break;
+            default:
+                printf("%c", map[i][j]);
+            }
         }
         printf("\n");
     }

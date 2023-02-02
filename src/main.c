@@ -28,7 +28,7 @@ int main()
     newt.c_lflag &= ~(ICANON | ECHO);
 
     // game map
-    char map[9][21] = {
+    char map[MAP_HEIGHT][MAP_WIDTH] = {
         "#--------|@|--------#",
         "|  [R]              |",
         "|                   |",

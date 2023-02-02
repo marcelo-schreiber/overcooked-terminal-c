@@ -1,7 +1,8 @@
 #include <stdlib.h>
+#include "../include/maputils.h"
 #include "../include/moveplayer.h"
 
-void movePlayer(char map[9][21], int playerX, int playerY, char move)
+void movePlayer(char map[MAP_HEIGHT][MAP_WIDTH], int playerX, int playerY, char move)
 {
     // move player
     switch (move)

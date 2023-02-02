@@ -3,12 +3,12 @@
 #include "../include/maputils.h"
 
 // print map function
-void printMap(char map[9][21])
+void printMap(char map[MAP_HEIGHT][MAP_WIDTH])
 {
     system("clear");
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < MAP_HEIGHT; i++)
     {
-        for (int j = 0; j < 21; j++)
+        for (int j = 0; j < MAP_WIDTH; j++)
         {
             printf("%c", map[i][j]);
         }
@@ -17,11 +17,11 @@ void printMap(char map[9][21])
 }
 
 // find character function
-void findChar(char map[9][21], char c, int *x, int *y)
+void findChar(char map[MAP_HEIGHT][MAP_WIDTH], char c, int *x, int *y)
 {
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < MAP_HEIGHT; i++)
     {
-        for (int j = 0; j < 21; j++)
+        for (int j = 0; j < MAP_WIDTH; j++)
         {
             if (map[i][j] == c)
             {

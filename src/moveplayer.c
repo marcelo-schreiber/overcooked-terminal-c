@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "../include/moveplayer.h"
 
-void movePlayer(char map[6][21], int playerX, int playerY, char move)
+void movePlayer(char map[9][21], int playerX, int playerY, char move)
 {
     // move player
     switch (move)

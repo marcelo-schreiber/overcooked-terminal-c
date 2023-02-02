@@ -1,1 +1,1 @@
-char isGettingIngredient(char map[6][21], int playerX, int playerY);
+char isGettingIngredient(char map[9][21], int playerX, int playerY);

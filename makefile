@@ -14,11 +14,13 @@ CC=gcc
  
 # Flags for compiler
 CC_FLAGS=-c         \
-         -Wall      \
-         -lm      \
-					-pthread \
-					-finput-charset=UTF-8
+          -Wall      \
+				  -finput-charset=UTF-8
  
+LIB_FLAGS=-lm\
+					 -lncurses\
+					 -lpthread\
+
 # Command used at clean target
 RM = rm -rf
  
@@ -26,13 +28,13 @@ RM = rm -rf
 all: objFolder $(PROJ_NAME)
  
 $(PROJ_NAME): $(OBJ)
-	$(CC) $^ -o $@ -lm
+	$(CC) $^ -o $@ $(LIB_FLAGS) 
  
 ./objects/%.o: ./src/%.c ./include/%.h
-	$(CC) $< $(CC_FLAGS) -o $@ -lm
+	$(CC) $< $(CC_FLAGS) -o $@ $(LIB_FLAGS)
  
 ./objects/main.o: ./src/main.c $(H_SOURCE)
-	$(CC) $< $(CC_FLAGS) -o $@ -lm
+	$(CC) $< $(CC_FLAGS) -o $@ $(LIB_FLAGS)
  
 objFolder:
 	@mkdir -p objects

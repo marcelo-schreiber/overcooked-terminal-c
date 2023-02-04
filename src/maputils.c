@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/maputils.h"
+#include "../include/colors.h"
 
 // print map function
 void printMap(char map[MAP_HEIGHT][MAP_WIDTH])
@@ -25,11 +26,49 @@ void printMap(char map[MAP_HEIGHT][MAP_WIDTH])
                 printf("«");
                 break;
             case 'o':
+                darkGray();
                 printf("Ø");
+                reset();
+                break;
+            case 'p':
+                lightBrown();
+                printf("p");
+                reset();
+                break;
+            case 'P':
+                lightBrown();
+                printf("P");
+                reset();
+                break;
+            case 'H':
+                brown();
+                printf("H");
+                reset();
+                break;
+            case 'Q':
+                yellow();
+                printf("Q");
+                reset();
+                break;
+            case 'F':
+                yellow();
+                printf("F");
+                reset();
+                break;
+            case 'R':
+                red();
+                printf("R");
+                reset();
+                break;
+            case 'S':
+                green();
+                printf("S");
+                reset();
                 break;
             default:
                 printf("%c", map[i][j]);
             }
+            //  if (position == 'p' || position == 'H' || position == 'Q' || position == '@' || position == 'o' || position == 'P' || position == 'S' || position == 'F' || position == 'R')
         }
         printf("\n");
     }

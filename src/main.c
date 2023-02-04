@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "../include/pedido.h"
 #include "../include/maputils.h"
@@ -32,15 +33,24 @@ int checkOrder(Cliente *q, Pedido *p)
 
     return correctOrder;
 }
+int randomNumber(int min, int max)
+{
+    return (rand() % (max - min + 1)) + min;
+}
+
+void addRandomOrder(Cliente *q, int size)
+{
+    initializeQueue(q, size);
+    for (int i = 0; i < size; i++)
+        adicionarPedido(q, randomNumber(1, 6));
+}
 
 int main()
 {
+    srand(time(NULL));
     static struct termios oldt, newt;
     Cliente *q = malloc(sizeof(Cliente));
-    initializeQueue(q, 5);
-    adicionarPedido(q, 1); // x-burger
-    adicionarPedido(q, 2); // x-burger
-    adicionarPedido(q, 3); // x-burger
+    addRandomOrder(q, randomNumber(3, 6));
 
     Pedido *p = malloc(sizeof(Pedido));
 
@@ -83,10 +93,6 @@ int main()
     char move = getchar();
     char ingredient = ' ';
 
-    push(p, 'p');
-    push(p, 'H');
-    push(p, 'Q');
-    push(p, 'P');
     int points = 0;
 
     while (move == 'w' || move == 'a' || move == 's' || move == 'd')

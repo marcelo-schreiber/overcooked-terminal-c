@@ -20,7 +20,7 @@ void checkTerminalSize(void)
     if ((h < MAX_LINES) || (w < MAX_COLS))
     {
         fprintf(stderr, "\nSorry.\n");
-        fprintf(stderr, "To play Pacman for Console, your console window must be at least %dx%d\n", MAX_COLS, MAX_LINES);
+        fprintf(stderr, "To play Overcooked in C for console, your console window must be at least %dx%d\n", MAX_COLS, MAX_LINES);
         fprintf(stderr, "Currently It's %dx%d\n", w, h);
         fprintf(stderr, "Please resize your window/resolution and re-run the game.\n\n");
         exit(0);

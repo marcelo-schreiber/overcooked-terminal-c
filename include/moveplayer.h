@@ -1,1 +1,1 @@
-void movePlayer(char map[9][21], int playerX, int playerY, char move);
+void movePlayer(char map[32][32], int playerX, int playerY, char move);

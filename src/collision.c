@@ -1,4 +1,5 @@
 #include "../include/collision.h"
+#include "../include/maputils.h"
 
 int check(char position)
 {
@@ -8,7 +9,7 @@ int check(char position)
 }
 
 // returns the ingredient that the player is next to or blank space if none
-char isGettingIngredient(char map[9][21], int playerX, int playerY)
+char isGettingIngredient(char map[MAP_HEIGHT][MAP_WIDTH], int playerX, int playerY)
 {
     char up, down, left, right;
 

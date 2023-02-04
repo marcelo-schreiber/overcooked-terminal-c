@@ -12,7 +12,7 @@
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
 #include <unistd.h>  //STDIN_FILENO
 
-void checkOrder(Cliente *q, Pedido *p)
+int checkOrder(Cliente *q, Pedido *p)
 {
     char *pedido = peek(q);
     char ingrediente;
@@ -22,13 +22,15 @@ void checkOrder(Cliente *q, Pedido *p)
     {
         ingrediente = pop(p);
         if (pedido[i] != ingrediente)
-            correctOrder = 0;
+            correctOrder = -1;
     }
 
     if (correctOrder == 1)
         dequeue(q);
 
     popAll(p);
+
+    return correctOrder;
 }
 
 int main()
@@ -85,6 +87,7 @@ int main()
     push(p, 'H');
     push(p, 'Q');
     push(p, 'P');
+    int points = 0;
 
     while (move == 'w' || move == 'a' || move == 's' || move == 'd')
     {
@@ -92,6 +95,7 @@ int main()
         printMap(map);
         printStack(p); // prints current ingredients
         printQueue(q); // prints current orders
+        printf("Pontos: %d", points);
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();                        // get next move
@@ -108,7 +112,10 @@ int main()
         if (ingredient == 'o')
             pop(p);
         else if (ingredient == '@')
-            checkOrder(q, p);
+        {
+            points += checkOrder(q, p);
+        }
+
         else if (ingredient != ' ')
             push(p, ingredient);
     }

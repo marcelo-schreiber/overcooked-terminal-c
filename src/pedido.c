@@ -2,34 +2,57 @@
 #include <stdio.h>
 #include "../include/pedido.h"
 
-void initializeStack(Pedido *s, int size)
-{
-    s->v = malloc(size * sizeof(char));
-    s->size = 0;
-    s->top = -1;
-}
-
 void push(Pedido *s, char ingrediente)
 {
-    s->size++;
-    s->v[s->size - 1] = ingrediente;
-    s->top = ingrediente;
+    Pedido *newOrder;
+    newOrder = malloc(sizeof(Pedido));
+    newOrder->ingrediente = ingrediente;
+
+    if (s->top == NULL)
+    {
+        newOrder->next = NULL;
+    }
+    else
+    {
+        newOrder->next = s->top; // Make the node as top
+    }
+    s->top = newOrder; // top always points to the newly created node
 }
 
 char pop(Pedido *s)
 {
-    if (s->size != 0)
+    Pedido *temp;
+    char ingrediente;
+    if (s->top == NULL)
     {
-        char ingrediente = s->v[s->size - 1];
-        s->size--;
-        return ingrediente;
+        printf("Stack is empty");
     }
-    return ' ';
+    else
+    {
+        temp = s->top;
+        ingrediente = temp->ingrediente;
+        s->top = s->top->next;
+        free(temp);
+    }
+    return ingrediente;
 }
 
 // print stack
 void printStack(Pedido *s)
 {
-    for (int i = 0; i < s->size; i++)
-        printf("%c\t", s->v[i]);
+    if (s->top == NULL)
+    {
+        printf("Stack is empty\n");
+    }
+    else
+    {
+        Pedido *temp;
+        temp = s->top;
+        while (temp != NULL)
+        {
+            printf("%c->", temp->ingrediente);
+            temp = temp->next;
+        }
+        printf("\n");
+    }
 }

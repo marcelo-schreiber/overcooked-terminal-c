@@ -1,15 +1,21 @@
 
+typedef struct pedidoAtual
+{
+    char *ingredientes;
+    struct pedidoAtual *next;
+    struct pedidoAtual *prev;
+} PedidoAtual;
+
 typedef struct Cliente
 {
-    char *pedido;
     int maxSize;
     int size;
-    struct Cliente *head;
-    struct Cliente *tail;
 
-    struct Cliente *next;
+    PedidoAtual *head;
+    PedidoAtual *tail;
 } Cliente;
 
+void printQueue(Cliente *q);
 void initializeQueue(Cliente *q, int size);
 void enqueue(Cliente *q, char *pedido, int tamPedido);
 int isEmpty(Cliente *q);

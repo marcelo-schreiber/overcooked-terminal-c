@@ -1,37 +1,43 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "../include/cliente.h"
 
 // queue functions
 // initialize queue
 void initializeQueue(Cliente *q, int size)
 {
-    q->head = NULL;
     q->maxSize = size;
-    q->tail = NULL;
-    q->pedido = NULL;
     q->size = 0;
+    q->head = NULL;
+    q->tail = NULL;
 }
 
 // enqueue
 void enqueue(Cliente *q, char *pedido, int tamPedido)
 {
-    // create new node
-    Cliente *newNode = malloc(sizeof(Cliente));
-    newNode->pedido = malloc(tamPedido * sizeof(char));
-    newNode->pedido = pedido;
-    newNode->next = NULL;
+    if (isFull(q))
+    {
+        printf("Fila cheia!");
+        return;
+    }
 
-    // if queue is empty
+    PedidoAtual *temp = (PedidoAtual *)malloc(sizeof(PedidoAtual));
+    temp->ingredientes = (char *)malloc(tamPedido * sizeof(char));
+    temp->ingredientes = pedido;
+    temp->next = NULL;
+    temp->prev = NULL;
+
     if (q->head == NULL)
     {
-        q->head = newNode;
-        q->tail = newNode;
+        q->head = temp;
+        q->tail = temp;
     }
     else
     {
-        q->tail->next = newNode;
-        q->tail = newNode;
+        q->tail->next = temp;
+        temp->prev = q->tail;
+        q->tail = temp;
     }
     q->size++;
 }
@@ -39,39 +45,55 @@ void enqueue(Cliente *q, char *pedido, int tamPedido)
 // dequeue
 void dequeue(Cliente *q)
 {
-    // if queue is empty
-    if (q->head == NULL)
+    if (isEmpty(q))
     {
+        printf("Fila vazia!");
         return;
     }
-    else
-    {
-        Cliente *temp = q->head;
-        q->head = q->head->next;
-        free(temp);
-        q->size--;
-    }
+
+    PedidoAtual *temp = q->head;
+    q->head = q->head->next;
+    q->head->prev = NULL;
+    free(temp);
+    q->size--;
 }
 
 char *peek(Cliente *q)
 {
-    // if queue is empty
-    if (q->head == NULL)
+    if (isEmpty(q))
     {
         printf("Fila vazia!");
-        return NULL;
+        return "Fila vazia!";
     }
-    return q->head->pedido;
+
+    return q->head->ingredientes;
 }
 
 int isFull(Cliente *q)
 {
-    return q->size == q->maxSize;
+    return q->size >= q->maxSize;
 }
 
 int isEmpty(Cliente *q)
 {
     return q->size == 0;
+}
+
+void printQueue(Cliente *q)
+{
+    if (isEmpty(q))
+    {
+        printf("Fila vazia!");
+        return;
+    }
+
+    PedidoAtual *temp = q->head;
+    while (temp != NULL)
+    {
+        printf("<-%s->", temp->ingredientes);
+        temp = temp->next;
+    }
+    printf("\n");
 }
 
 void adicionarPedido(Cliente *q, int pedidoId)

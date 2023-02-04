@@ -16,11 +16,12 @@ int main()
 {
     static struct termios oldt, newt;
     Cliente *q = malloc(sizeof(Cliente));
-    initializeQueue(q, 2);
+    initializeQueue(q, 5);
     adicionarPedido(q, 1); // x-burger
+    adicionarPedido(q, 2); // x-burger
+    adicionarPedido(q, 3); // x-burger
 
     Pedido *p = malloc(sizeof(Pedido));
-    initializeStack(p, 7);
 
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
@@ -81,6 +82,7 @@ int main()
         system("clear"); // clear screen
         printMap(map);
         printStack(p); // prints current ingredients
+        printQueue(q); // prints current orders
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();                        // get next move

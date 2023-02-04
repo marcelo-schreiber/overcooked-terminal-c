@@ -14,8 +14,10 @@ CC=gcc
  
 # Flags for compiler
 CC_FLAGS=-c         \
-          -Wall      \
-				  -finput-charset=UTF-8
+         -Wall      \
+         -lm      \
+		 -pthread \
+		 -finput-charset=UTF-8
  
 LIB_FLAGS=-lm\
 					 -lncurses\

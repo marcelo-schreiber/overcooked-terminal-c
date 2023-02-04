@@ -8,4 +8,5 @@ typedef struct stack
 
 void push(Pedido *s, char ingrediente);
 char pop(Pedido *s);
+void popAll(Pedido *s);
 void printStack(Pedido *s);

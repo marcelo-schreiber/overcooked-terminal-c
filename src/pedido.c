@@ -26,6 +26,7 @@ char pop(Pedido *s)
     if (s->top == NULL)
     {
         printf("Stack is empty");
+        return ' ';
     }
     else
     {
@@ -35,6 +36,24 @@ char pop(Pedido *s)
         free(temp);
     }
     return ingrediente;
+}
+
+void popAll(Pedido *s)
+{
+    Pedido *temp;
+    if (s->top == NULL)
+    {
+        printf("Stack is empty");
+    }
+    else
+    {
+        while (s->top != NULL)
+        {
+            temp = s->top;
+            s->top = s->top->next;
+            free(temp);
+        }
+    }
 }
 
 // print stack

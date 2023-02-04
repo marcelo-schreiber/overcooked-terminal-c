@@ -3,7 +3,7 @@
 
 int check(char position)
 {
-    if (position == 'p' || position == 'H' || position == 'Q' || position == 'o' || position == 'P' || position == 'S' || position == 'F' || position == 'R')
+    if (position == 'p' || position == 'H' || position == 'Q' || position == '@' || position == 'o' || position == 'P' || position == 'S' || position == 'F' || position == 'R')
         return 1;
     return 0;
 }

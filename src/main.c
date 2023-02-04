@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../include/pedido.h"
 #include "../include/maputils.h"
@@ -7,10 +8,28 @@
 #include "../include/collision.h"
 #include "../include/mainmenu.h"
 #include "../include/moveplayer.h"
-
 // terminal utils
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
 #include <unistd.h>  //STDIN_FILENO
+
+void checkOrder(Cliente *q, Pedido *p)
+{
+    char *pedido = peek(q);
+    char ingrediente;
+    int correctOrder = 1;
+
+    for (int i = strlen(pedido) - 1; i >= 0; i--)
+    {
+        ingrediente = pop(p);
+        if (pedido[i] != ingrediente)
+            correctOrder = 0;
+    }
+
+    if (correctOrder == 1)
+        dequeue(q);
+
+    popAll(p);
+}
 
 int main()
 {
@@ -30,39 +49,24 @@ int main()
 
     // game map
     char map[MAP_HEIGHT][MAP_WIDTH] = {
-        "                                ",
-        "                                ",
-        "                                ",
-        "                                ",
-        "                                ",
-        "                                ",
         " #----------------------------# ",
         " |[P]  [p]         [Q]        | ",
         " |                            | ",
         " |                            | ",
+        " |                            | ",
         " |                         [S]| ",
-        " |                            | ",
-        " |                            | ",
-        " |                            | ",
         " |                            | ",
         " |                            | ",
         " |              [F]           | ",
         " #-------------------         | ",
         " |                            | ",
         " |                            | ",
-        " |                            | ",
-        " @                            | ",
         " @                            | ",
         " @                &           | ",
         " @                            | ",
-        " @                            | ",
-        " |                            | ",
-        " |                            | ",
         " |                            | ",
         " |     [H]                   o| ",
         " #----------------------------# ",
-        "                                "
-
     };
 
     tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
@@ -76,6 +80,11 @@ int main()
     printMap(map);
     char move = getchar();
     char ingredient = ' ';
+
+    push(p, 'p');
+    push(p, 'H');
+    push(p, 'Q');
+    push(p, 'P');
 
     while (move == 'w' || move == 'a' || move == 's' || move == 'd')
     {
@@ -98,6 +107,8 @@ int main()
         // add or remove ingredient from stack
         if (ingredient == 'o')
             pop(p);
+        else if (ingredient == '@')
+            checkOrder(q, p);
         else if (ingredient != ' ')
             push(p, ingredient);
     }

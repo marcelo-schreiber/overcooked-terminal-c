@@ -22,7 +22,7 @@ void printMap(char map[MAP_HEIGHT][MAP_WIDTH])
                 printf("─");
                 break;
             case '@':
-                printf("»");
+                printf("«");
                 break;
             case 'o':
                 printf("Ø");

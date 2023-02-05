@@ -117,15 +117,11 @@ int main()
             free(q); // free memory
             free(p);
             if (hasContinued != 'c')
-            {
-                system("clear");
                 break;
-            }
 
-            wrongOrders = 0;
-            points = 0;
+            wrongOrders, points = 0;
+
             // reset queue
-
             q = malloc(sizeof(Cliente));
             addRandomOrder(q, randomNumber(3, 6));
 

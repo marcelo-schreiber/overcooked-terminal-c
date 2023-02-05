@@ -151,7 +151,7 @@ int main()
         {
             if (checkOrder(q, p) == -1)
             {
-                points -= POINTS_PER_WRONG_ORDER;
+                points += POINTS_PER_WRONG_ORDER;
                 wrongOrders++;
             }
             else

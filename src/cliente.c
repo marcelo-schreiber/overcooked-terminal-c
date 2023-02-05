@@ -116,7 +116,7 @@ void adicionarPedido(Cliente *q, int pedidoId)
         enqueue(q, "pHQPFR", 6); // combo 1
         break;
     case 4:
-        enqueue(q, "phSPFR", 6); // combo 2
+        enqueue(q, "pHSPFR", 6); // combo 2
     case 5:
         enqueue(q, "pQPFR", 5); // Vegetariano
         break;

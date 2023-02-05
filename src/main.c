@@ -119,7 +119,8 @@ int main()
             if (hasContinued != 'c')
                 break;
 
-            wrongOrders, points = 0;
+            wrongOrders = 0;
+            points = 0;
 
             // reset queue
             q = malloc(sizeof(Cliente));
@@ -169,9 +170,10 @@ int main()
         else if (ingredient != ' ')
             push(p, ingredient);
 
-        printStack(p); // prints current ingredients
         printQueue(q); // prints current orders
+
         printf("Points: %d\n", points);
+        printStack(p); // prints current ingredients
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();                        // get next move

@@ -10,10 +10,14 @@
 #include "../include/mainmenu.h"
 #include "../include/moveplayer.h"
 #include "../include/gameover.h"
+#include "../include/winscreen.h"
 
 // terminal utils
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
 #include <unistd.h>  //STDIN_FILENO
+
+#define POINTS_PER_ORDER 10
+#define POINTS_PER_WRONG_ORDER -5
 
 int checkOrder(Cliente *q, Pedido *p)
 {
@@ -109,17 +113,23 @@ int main()
             tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
             char hasContinued = displayGameOverScreen(points);
             tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
-            if (hasContinued == 'q')
-                return 0;
+
+            free(q); // free memory
+            free(p);
+            if (hasContinued != 'c')
+            {
+                system("clear");
+                break;
+            }
 
             wrongOrders = 0;
             points = 0;
             // reset queue
-            free(q);
+
             q = malloc(sizeof(Cliente));
             addRandomOrder(q, randomNumber(3, 6));
+
             // reset stack
-            free(p);
             p = malloc(sizeof(Pedido));
 
             // set player to initial position
@@ -141,11 +151,24 @@ int main()
         {
             if (checkOrder(q, p) == -1)
             {
-                points -= 5;
+                points -= POINTS_PER_WRONG_ORDER;
                 wrongOrders++;
             }
             else
-                points += 10;
+                points += POINTS_PER_ORDER;
+
+            // check if queue is empty
+            if (isEmpty(q) == 1)
+            {
+                free(q); // free memory
+                free(p);
+
+                tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
+                displayWinScreen(points);
+                tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
+                system("clear");
+                break;
+            }
         }
         else if (ingredient != ' ')
             push(p, ingredient);

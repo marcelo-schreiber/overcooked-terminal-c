@@ -6,7 +6,6 @@
 
 char displayGameOverScreen(int points)
 {
-
   system("clear");
   brown();
   printf("   _____          __  __ ______    ______      ________ _____\n");
@@ -31,7 +30,21 @@ char displayGameOverScreen(int points)
   printf("     | |              \\_\\  | /_/\n");
   printf("     |_|                   |_| \n");
   reset();
-  printf("\nYou've scored %d points!\n", points);
+  printf("\n");
+  darkGray();
+  // print the comment above with printfs escaping backslashes
+  printf("       (\\ \n");
+  printf("        \\ \\ \n");
+  printf("    __    \\/ ___,.-------..__        __ \n");
+  printf("   //\\\\ _,-'\\\\               `'--._ //\\\\ \n");
+  printf("   \\\\ ;'      \\\\        :(         `: //  You scored %d points! \n", points);
+  printf("    `(          \\\\                   )' \n");
+  printf("      :.          \\\\,----,         ,; \n");
+  printf("       `.`--.___   (    /  ___.--',' \n");
+  printf("         `.     ``-----'-''     ,' \n");
+  printf("            -.               ,- \n");
+  printf("               `-._______.-' \n");
+  reset();
 
   return getchar();
 };

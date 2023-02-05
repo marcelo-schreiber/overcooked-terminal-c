@@ -7,6 +7,7 @@
 #include <ncurses.h> // get terminal size
 
 #include "../include/mainmenu.h"
+#include "../include/colors.h"
 
 #define MAX_COLS 90
 #define MAX_LINES 35
@@ -22,13 +23,16 @@ void checkTerminalSize(void)
         fprintf(stderr, "\nSorry.\n");
         fprintf(stderr, "To play Overcooked in C for console, your console window must be at least %dx%d\n", MAX_COLS, MAX_LINES);
         fprintf(stderr, "Currently It's %dx%d\n", w, h);
+        red();
         fprintf(stderr, "Please resize your window/resolution and re-run the game.\n\n");
+        reset();
         exit(0);
     }
 }
 
 void printLogo(void)
 {
+    red();
     printf(" _______           _______  _______  _______  _______  _______  _        _______  ______  \n");
     printf("(  ___  )|\\     /|(  ____ \\(  ____ )(  ____ \\(  ___  )(  ___  )| \\    /\\(  ____ \\(  __  \\ \n");
     printf("| (   ) || )   ( || (    \\/| (    )|| (    \\/| (   ) || (   ) ||  \\  / /| (    \\/| (  \\  )\n");
@@ -37,7 +41,8 @@ void printLogo(void)
     printf("| |   | | \\ \\_/ / | (      | (\\ (   | |      | |   | || |   | ||  ( \\ \\ | (      | |   ) |\n");
     printf("| (___) |  \\   /  | (____/\\| ) \\ \\__| (____/\\| (___) || (___) ||  /  \\ \\| (____/\\| (__/  )\n");
     printf("(_______)   \\_/   (_______/|/   \\__/(_______/(_______)(_______)|_/    \\/(_______/(______/ \n\n");
-    printf("Bem-vindo ao overcooked em...\n");
+    printf("Welcome to Overcooked in...\n");
+    reset();
 }
 
 void *printDonut(void *arg)
@@ -82,7 +87,8 @@ void *printDonut(void *arg)
         printLogo();
         for (k = 0; 1761 > k; k++)
             putchar(k % 80 ? b[k] : 10);
-        printf("Pressione qualquer tecla para começar ou 'q' para sair...\n");
+
+        printf("Press any key to start or 'q' to quit...\n");
         A += 0.005;
     }
 
@@ -94,6 +100,7 @@ char printMainMenu()
     char input = ' ';
     pthread_t thread;
     system("clear");
+
     checkTerminalSize();
     pthread_create(&thread, NULL, printDonut, &input); // print menu
     input = getchar();                                 // get input in another thread

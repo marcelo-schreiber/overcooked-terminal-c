@@ -1,0 +1,1 @@
+char displayGameOverScreen(int points);

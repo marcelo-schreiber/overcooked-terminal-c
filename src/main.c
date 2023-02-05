@@ -9,6 +9,8 @@
 #include "../include/collision.h"
 #include "../include/mainmenu.h"
 #include "../include/moveplayer.h"
+#include "../include/gameover.h"
+
 // terminal utils
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
 #include <unistd.h>  //STDIN_FILENO
@@ -47,6 +49,7 @@ void addRandomOrder(Cliente *q, int size)
 
 int main()
 {
+    int wrongOrders = 0;
     srand(time(NULL));
     static struct termios oldt, newt;
     Cliente *q = malloc(sizeof(Cliente));
@@ -83,6 +86,7 @@ int main()
 
     tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
     char quitted = printMainMenu() == 'q';
+
     if (quitted)
     {
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings before quitting
@@ -94,22 +98,38 @@ int main()
     char ingredient = ' ';
 
     int points = 0;
+    int row, col;
 
     while (move == 'w' || move == 'a' || move == 's' || move == 'd')
     {
         system("clear"); // clear screen
+
+        if (wrongOrders == 3)
+        {
+            tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
+            char hasContinued = displayGameOverScreen(points);
+            tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
+            if (hasContinued == 'q')
+                return 0;
+
+            wrongOrders = 0;
+            points = 0;
+            // reset queue
+            free(q);
+            q = malloc(sizeof(Cliente));
+            addRandomOrder(q, randomNumber(3, 6));
+            // reset stack
+            free(p);
+            p = malloc(sizeof(Pedido));
+
+            // set player to initial position
+            findChar(map, '&', &row, &col);
+            map[row][col] = ' ';
+            map[13][16] = '&'; // 13 16 is the default position
+        }
+
         printMap(map);
-        printStack(p); // prints current ingredients
-        printQueue(q); // prints current orders
-        printf("Pontos: %d", points);
-
-        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-        move = getchar();                        // get next move
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore
-
-        int row, col;
         findChar(map, '&', &row, &col);
-        movePlayer(map, row, col, move);
 
         // collision
         ingredient = isGettingIngredient(map, col, row);
@@ -119,11 +139,26 @@ int main()
             pop(p);
         else if (ingredient == '@')
         {
-            points += checkOrder(q, p);
+            if (checkOrder(q, p) == -1)
+            {
+                points -= 5;
+                wrongOrders++;
+            }
+            else
+                points += 10;
         }
-
         else if (ingredient != ' ')
             push(p, ingredient);
+
+        printStack(p); // prints current ingredients
+        printQueue(q); // prints current orders
+        printf("Points: %d\n", points);
+
+        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+        move = getchar();                        // get next move
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore
+
+        movePlayer(map, row, col, move);
     }
 
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore to old settings before quitting

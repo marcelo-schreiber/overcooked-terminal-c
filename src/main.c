@@ -157,7 +157,7 @@ int main()
             else
                 points += POINTS_PER_ORDER;
 
-            // check if queue is empty
+            // check if won the game
             if (isEmpty(q) == 1)
             {
                 free(q); // free memory

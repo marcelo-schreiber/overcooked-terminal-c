@@ -18,7 +18,6 @@ void enqueue(Cliente *q, char *pedido, int tamPedido)
 {
     if (isFull(q) == 1)
     {
-        printf("Fila cheia!");
         return;
     }
 
@@ -46,14 +45,19 @@ void enqueue(Cliente *q, char *pedido, int tamPedido)
 void dequeue(Cliente *q)
 {
     if (isEmpty(q) == 1)
-    {
-        printf("Fila vazia!");
         return;
-    }
 
     PedidoAtual *temp = q->head;
-    q->head = q->head->next;
-    q->head->prev = NULL;
+    if (q->head == q->tail)
+    {
+        q->head = NULL;
+        q->tail = NULL;
+    }
+    else
+    {
+        q->head = q->head->next;
+        q->head->prev = NULL;
+    }
     free(temp);
     q->size = q->size - 1;
 }
@@ -100,7 +104,6 @@ void adicionarPedido(Cliente *q, int pedidoId)
 {
     if (isFull(q) == 1)
     {
-        printf("Fila cheia!");
         return;
     }
 

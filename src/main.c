@@ -13,6 +13,7 @@
 #include "../include/gameover.h"
 #include "../include/winscreen.h"
 #include "../include/colors.h"
+#include "../include/patience.h"
 
 // terminal utils
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
@@ -20,8 +21,8 @@
 
 #define MAX_WRONG_ORDERS 3
 #define POINTS_PER_ORDER 10
-#define POINTS_PER_WRONG_ORDER 5
-#define MAX_TIME_PER_ORDER 5
+#define POINTS_PER_WRONG_ORDER 10
+#define MAX_TIME_PER_ORDER 15
 
 // global variables for comunicating between threads
 struct thread_args
@@ -49,7 +50,7 @@ void *timeout_thread(void *arg)
     pthread_t *threadId = arg_struct.threadId;
 
     dequeue(q);
-    *points -= POINTS_PER_WRONG_ORDER;
+    *points -= POINTS_PER_WRONG_ORDER / 2;
     *wrongOrders += 1;
 
     struct thread_args *new_arg_struct = malloc(sizeof(struct thread_args));
@@ -99,20 +100,6 @@ void addRandomOrder(Cliente *q, int size)
 int main()
 {
     srand(time(NULL));
-    static struct termios oldt, newt;
-    pthread_t threadId;
-    int points = 0;
-    int row, col;
-    int wrongOrders = 0;
-    int percentage = 0;
-    int numOfOrders = 10;
-    char ingredient = ' ';
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-
-    newt.c_lflag &= ~(ICANON | ECHO); // disable echo and canonical mode
-
     // game map
     char map[MAP_HEIGHT][MAP_WIDTH] = {
         " #----------------------------# ",
@@ -134,6 +121,21 @@ int main()
         " |     [H]                   o| ",
         " #----------------------------# ",
     };
+    static struct termios oldt, newt;
+    pthread_t threadId;
+    int points = 0;
+    int row, col;
+    findChar(map, '&', &row, &col);
+
+    int wrongOrders = 0;
+    int percentage = 0;
+    int numOfOrders = 6;
+    char ingredient = ' ';
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+
+    newt.c_lflag &= ~(ICANON | ECHO); // disable echo and canonical mode
 
     tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
     char quitted = printMainMenu() == 'q';
@@ -181,7 +183,6 @@ int main()
         // check if player won
         else if (isEmpty(q) == 1)
         {
-
             free(q); // free memory
             free(p);
             pthread_cancel(threadId);
@@ -193,7 +194,6 @@ int main()
 
         system("clear"); // clear screen
         printMap(map);
-        findChar(map, '&', &row, &col);
 
         // collision
         ingredient = isGettingIngredient(map, col, row);
@@ -201,7 +201,7 @@ int main()
         // add or remove ingredient from stack
         if (ingredient == 'o')
             pop(p);
-        else if (ingredient == '@' && isEmptyStack(p) == 0)
+        if (ingredient == '@' && isEmptyStack(p) == 0)
         {
             percentage = 0; // reset patience bar
 
@@ -213,21 +213,18 @@ int main()
             else
                 points += POINTS_PER_ORDER;
         }
-        else if (ingredient != ' ' && ingredient != 'o' && ingredient != '@')
+        if (ingredient != ' ' && ingredient != 'o' && ingredient != '@')
             push(p, ingredient);
 
-        red();
-        printf("Points: %d | Patience meter: %d%%\n", points, 100 - percentage);
-        reset();
-
-        printQueue(q); // prints current orders
-        printStack(p); // prints current ingredients
+        printStack(p);                     // prints current ingredients
+        printPatience(points, percentage); // prints patience bar and points
+        printQueue(q);                     // prints current orders
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar(); // get next move
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 
-        movePlayer(map, row, col, move);
+        movePlayer(map, &row, &col, move);
     }
 
     pthread_exit(NULL);

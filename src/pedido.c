@@ -76,7 +76,7 @@ void printStack(Pedido *s)
     printf("\n");
     while (temp != NULL)
     {
-        printf("    %c\n", temp->ingrediente);
+        printf("%c\t", temp->ingrediente);
         temp = temp->next;
     }
     darkGray();

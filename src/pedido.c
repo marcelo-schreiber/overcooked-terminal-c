@@ -81,5 +81,6 @@ void printStack(Pedido *s)
     }
     darkGray();
     printf("\\______/"); // plate
+    printf("\n");
     reset();
 }

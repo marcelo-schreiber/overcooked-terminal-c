@@ -1,7 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
+
 #include "../include/cliente.h"
+#include "../include/colors.h"
 
 // queue functions
 // initialize queue
@@ -17,13 +20,12 @@ void initializeQueue(Cliente *q, int size)
 void enqueue(Cliente *q, char *pedido, int tamPedido)
 {
     if (isFull(q) == 1)
-    {
         return;
-    }
 
     PedidoAtual *temp = (PedidoAtual *)malloc(sizeof(PedidoAtual));
     temp->ingredientes = (char *)malloc(tamPedido * sizeof(char));
     temp->ingredientes = pedido;
+    temp->pedidoId = q->size;
     temp->next = NULL;
     temp->prev = NULL;
 
@@ -47,7 +49,6 @@ void dequeue(Cliente *q)
     if (isEmpty(q) == 1)
         return;
 
-    PedidoAtual *temp = q->head;
     if (q->head == q->tail)
     {
         q->head = NULL;
@@ -58,17 +59,14 @@ void dequeue(Cliente *q)
         q->head = q->head->next;
         q->head->prev = NULL;
     }
-    free(temp);
+
     q->size = q->size - 1;
 }
 
 char *peek(Cliente *q)
 {
     if (isEmpty(q) == 1)
-    {
-        printf("Fila vazia!");
         return "Fila vazia!";
-    }
 
     return q->head->ingredientes;
 }
@@ -86,26 +84,24 @@ int isEmpty(Cliente *q)
 void printQueue(Cliente *q)
 {
     if (isEmpty(q) == 1)
-    {
-        printf("Fila vazia!");
         return;
-    }
 
     PedidoAtual *temp = q->head;
+    printf("╔════════╦════╗\n");
+    printf("║ Order  ║ Id ║\n");
+    printf("╠════════╬════╣\n");
     while (temp != NULL)
     {
-        printf("<-%s->", temp->ingredientes);
+        printf("║ %-6s ║ %-2d ║\n", temp->ingredientes, temp->pedidoId);
         temp = temp->next;
     }
-    printf("\n");
+    printf("╚════════╩════╝\n");
 }
 
 void adicionarPedido(Cliente *q, int pedidoId)
 {
     if (isFull(q) == 1)
-    {
         return;
-    }
 
     switch (pedidoId)
     {

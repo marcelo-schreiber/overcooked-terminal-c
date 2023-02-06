@@ -17,7 +17,7 @@
 #include <unistd.h>  //STDIN_FILENO
 
 #define POINTS_PER_ORDER 10
-#define POINTS_PER_WRONG_ORDER -5
+#define POINTS_PER_WRONG_ORDER 5
 
 int checkOrder(Cliente *q, Pedido *p)
 {
@@ -117,12 +117,15 @@ int main()
             free(q); // free memory
             free(p);
             if (hasContinued != 'c')
+            {
+                system("clear");
                 break;
+            }
 
             wrongOrders = 0;
             points = 0;
-
             // reset queue
+
             q = malloc(sizeof(Cliente));
             addRandomOrder(q, randomNumber(3, 6));
 
@@ -148,13 +151,13 @@ int main()
         {
             if (checkOrder(q, p) == -1)
             {
-                points += POINTS_PER_WRONG_ORDER;
+                points -= POINTS_PER_WRONG_ORDER;
                 wrongOrders++;
             }
             else
                 points += POINTS_PER_ORDER;
 
-            // check if won the game
+            // check if queue is empty
             if (isEmpty(q) == 1)
             {
                 free(q); // free memory
@@ -170,10 +173,9 @@ int main()
         else if (ingredient != ' ')
             push(p, ingredient);
 
-        printQueue(q); // prints current orders
-
-        printf("Points: %d\n", points);
         printStack(p); // prints current ingredients
+        printQueue(q); // prints current orders
+        printf("Points: %d\n", points);
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();                        // get next move

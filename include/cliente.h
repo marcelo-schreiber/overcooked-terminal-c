@@ -4,6 +4,8 @@ typedef struct pedidoAtual
     char *ingredientes;
     struct pedidoAtual *next;
     struct pedidoAtual *prev;
+
+    int pedidoId;
 } PedidoAtual;
 
 typedef struct Cliente

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/pedido.h"
+#include "../include/colors.h"
 
 void initializeStack(Pedido *s)
 {
@@ -65,9 +66,13 @@ void printStack(Pedido *s)
 
     Pedido *temp;
     temp = s->top;
+    printf("\n");
     while (temp != NULL)
     {
-        printf("%c\n", temp->ingrediente);
+        printf("    %c\n", temp->ingrediente);
         temp = temp->next;
     }
+    darkGray();
+    printf("\\______/"); // plate
+    reset();
 }

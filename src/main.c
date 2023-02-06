@@ -11,6 +11,7 @@
 #include "../include/moveplayer.h"
 #include "../include/gameover.h"
 #include "../include/winscreen.h"
+#include "../include/colors.h"
 
 // terminal utils
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
@@ -173,9 +174,11 @@ int main()
         else if (ingredient != ' ')
             push(p, ingredient);
 
-        printStack(p); // prints current ingredients
         printQueue(q); // prints current orders
+        red();
         printf("Points: %d\n", points);
+        reset();
+        printStack(p); // prints current ingredients
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar();                        // get next move

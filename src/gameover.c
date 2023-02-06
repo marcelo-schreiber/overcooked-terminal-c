@@ -45,6 +45,7 @@ char displayGameOverScreen(int points)
   printf("            -.               ,- \n");
   printf("               `-._______.-' \n");
   reset();
+  char c = getchar();
 
-  return getchar();
+  return c;
 };

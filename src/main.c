@@ -86,12 +86,6 @@ int main()
     srand(time(NULL));
     static struct termios oldt, newt;
 
-    Pedido *p = malloc(sizeof(Pedido));
-    Cliente *q = malloc(sizeof(Cliente));
-
-    int numOfOrders = 1;
-    addRandomOrder(q, numOfOrders);
-
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
 
@@ -134,6 +128,12 @@ int main()
 
     int points = 0;
     int row, col;
+
+    Pedido *p = malloc(sizeof(Pedido));
+    Cliente *q = malloc(sizeof(Cliente));
+
+    int numOfOrders = 1;
+    addRandomOrder(q, numOfOrders);
 
     pthread_create(&threadId, NULL, timeout_thread, (void *)q);
     // main game loop

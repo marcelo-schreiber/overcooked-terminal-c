@@ -47,5 +47,6 @@ char displayWinScreen(int points)
   printf("You have won the game with %d points!\n\n", points);
   reset();
   printf("Press any key to continue...");
-  return getchar();
+  char c = getchar();
+  return c;
 };

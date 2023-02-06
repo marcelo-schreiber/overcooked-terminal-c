@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 #include <time.h>
 
 #include "../include/pedido.h"
@@ -17,8 +18,52 @@
 #include <termios.h> //termios, TCSANOW, ECHO, ICANON
 #include <unistd.h>  //STDIN_FILENO
 
+#define MAX_WRONG_ORDERS 3
 #define POINTS_PER_ORDER 10
 #define POINTS_PER_WRONG_ORDER 5
+#define MAX_TIME_PER_ORDER 5
+
+// global variables for comunicating between threads
+struct thread_args
+{
+    Cliente *q;
+
+    pthread_t *threadId;
+    int *wrongOrders;
+    int *points;
+    int *percentage;
+};
+
+void *timeout_thread(void *arg)
+{
+    struct thread_args arg_struct = *(struct thread_args *)arg;
+    // get percentage from args
+    int *percentage = arg_struct.percentage;
+
+    for (*percentage = 0; *percentage < 100; *percentage += 100 / MAX_TIME_PER_ORDER) // 20 seconds to complete an order
+        sleep(1);
+
+    Cliente *q = (Cliente *)arg_struct.q;
+    int *wrongOrders = arg_struct.wrongOrders;
+    int *points = arg_struct.points;
+    pthread_t *threadId = arg_struct.threadId;
+
+    dequeue(q);
+    *points -= POINTS_PER_WRONG_ORDER;
+    *wrongOrders += 1;
+
+    struct thread_args *new_arg_struct = malloc(sizeof(struct thread_args));
+    new_arg_struct->q = q;
+    new_arg_struct->wrongOrders = wrongOrders;
+    new_arg_struct->points = points;
+    new_arg_struct->percentage = percentage;
+    new_arg_struct->threadId = threadId;
+
+    if (isEmpty(q) == 0)
+        pthread_create(threadId, NULL, timeout_thread, (void *)new_arg_struct);
+
+    return NULL;
+}
 
 int checkOrder(Cliente *q, Pedido *p)
 {
@@ -33,8 +78,7 @@ int checkOrder(Cliente *q, Pedido *p)
             correctOrder = -1;
     }
 
-    if (correctOrder == 1)
-        dequeue(q);
+    dequeue(q);
 
     popAll(p);
 
@@ -54,18 +98,20 @@ void addRandomOrder(Cliente *q, int size)
 
 int main()
 {
-    int wrongOrders = 0;
     srand(time(NULL));
     static struct termios oldt, newt;
-    Cliente *q = malloc(sizeof(Cliente));
-    addRandomOrder(q, randomNumber(3, 6));
-
-    Pedido *p = malloc(sizeof(Pedido));
+    pthread_t threadId;
+    int points = 0;
+    int row, col;
+    int wrongOrders = 0;
+    int percentage = 0;
+    int numOfOrders = 10;
+    char ingredient = ' ';
 
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
 
-    newt.c_lflag &= ~(ICANON | ECHO);
+    newt.c_lflag &= ~(ICANON | ECHO); // disable echo and canonical mode
 
     // game map
     char map[MAP_HEIGHT][MAP_WIDTH] = {
@@ -91,54 +137,61 @@ int main()
 
     tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
     char quitted = printMainMenu() == 'q';
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings before quitting
 
     if (quitted)
-    {
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings before quitting
         return 0;
-    }
 
     printMap(map);
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
     char move = getchar();
-    char ingredient = ' ';
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings before quitting
 
-    int points = 0;
-    int row, col;
+    Pedido *p = malloc(sizeof(Pedido));
+    Cliente *q = malloc(sizeof(Cliente));
 
-    while (move == 'w' || move == 'a' || move == 's' || move == 'd')
+    addRandomOrder(q, numOfOrders);
+
+    struct thread_args *arg_struct = malloc(sizeof(struct thread_args));
+    arg_struct->q = q;
+    arg_struct->wrongOrders = &wrongOrders;
+    arg_struct->points = &points;
+    arg_struct->percentage = &percentage;
+    arg_struct->threadId = &threadId;
+
+    // start thread
+    pthread_create(&threadId, NULL, timeout_thread, (void *)arg_struct);
+
+    // main game loop
+    while (1)
     {
-        system("clear"); // clear screen
-
-        if (wrongOrders == 3)
+        // check if player lost
+        if (wrongOrders == MAX_WRONG_ORDERS)
         {
-            tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
-            char hasContinued = displayGameOverScreen(points);
-            tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
+            free(q); // free memory
+            free(p);
+            pthread_cancel(threadId); // cancel thread
+
+            displayGameOverScreen(points);
+
+            break;
+        }
+
+        // check if player won
+        else if (isEmpty(q) == 1)
+        {
 
             free(q); // free memory
             free(p);
-            if (hasContinued != 'c')
-            {
-                system("clear");
-                break;
-            }
+            pthread_cancel(threadId);
 
-            wrongOrders = 0;
-            points = 0;
-            // reset queue
+            displayWinScreen(points);
 
-            q = malloc(sizeof(Cliente));
-            addRandomOrder(q, randomNumber(3, 6));
-
-            // reset stack
-            p = malloc(sizeof(Pedido));
-
-            // set player to initial position
-            findChar(map, '&', &row, &col);
-            map[row][col] = ' ';
-            map[13][16] = '&'; // 13 16 is the default position
+            break;
         }
 
+        system("clear"); // clear screen
         printMap(map);
         findChar(map, '&', &row, &col);
 
@@ -148,8 +201,10 @@ int main()
         // add or remove ingredient from stack
         if (ingredient == 'o')
             pop(p);
-        else if (ingredient == '@')
+        else if (ingredient == '@' && isEmptyStack(p) == 0)
         {
+            percentage = 0; // reset patience bar
+
             if (checkOrder(q, p) == -1)
             {
                 points -= POINTS_PER_WRONG_ORDER;
@@ -157,36 +212,26 @@ int main()
             }
             else
                 points += POINTS_PER_ORDER;
-
-            // check if queue is empty
-            if (isEmpty(q) == 1)
-            {
-                free(q); // free memory
-                free(p);
-
-                tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
-                displayWinScreen(points);
-                tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
-                system("clear");
-                break;
-            }
         }
-        else if (ingredient != ' ')
+        else if (ingredient != ' ' && ingredient != 'o' && ingredient != '@')
             push(p, ingredient);
 
-        printQueue(q); // prints current orders
         red();
-        printf("Points: %d\n", points);
+        printf("Points: %d | Patience meter: %d%%\n", points, 100 - percentage);
         reset();
+
+        printQueue(q); // prints current orders
         printStack(p); // prints current ingredients
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-        move = getchar();                        // get next move
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore
+        move = getchar(); // get next move
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 
         movePlayer(map, row, col, move);
     }
 
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore to old settings before quitting
+    pthread_exit(NULL);
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings before quitting
+
     return 0;
 }

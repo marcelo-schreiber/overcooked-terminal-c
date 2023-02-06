@@ -9,6 +9,13 @@ void initializeStack(Pedido *s)
     s->size = 0;
 }
 
+int isEmptyStack(Pedido *s)
+{
+    if (s->size == 0)
+        return 1;
+    return 0;
+}
+
 void push(Pedido *s, char ingrediente)
 {
     Pedido *newOrder;

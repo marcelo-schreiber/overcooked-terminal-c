@@ -89,7 +89,7 @@ int main()
     Pedido *p = malloc(sizeof(Pedido));
     Cliente *q = malloc(sizeof(Cliente));
 
-    int numOfOrders = randomNumber(3, 6);
+    int numOfOrders = 1;
     addRandomOrder(q, numOfOrders);
 
     tcgetattr(STDIN_FILENO, &oldt);
@@ -143,11 +143,11 @@ int main()
 
         if (wrongOrders == MAX_WRONG_ORDERS)
         {
-            tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
-            displayGameOverScreen(points);
-
             free(q); // free memory
             free(p);
+            tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
+            displayGameOverScreen(points);
+
             system("clear");
             break;
         }
@@ -176,14 +176,14 @@ int main()
             // check if queue is empty
             if (isEmpty(q) == 1 && wrongOrders != MAX_WRONG_ORDERS) // prevent losing and winning at the same time
             {
-                tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings
-                free(q);                                 // free memory
-                free(p);
 
+                free(q); // free memory
+                free(p);
+                tcsetattr(STDIN_FILENO, TCSANOW, &newt); // set to new settings
                 displayWinScreen(points);
 
                 system("clear");
-                return 0;
+                break;
             }
         }
         else if (ingredient != ' ' && ingredient != 'o' && ingredient != '@')
@@ -204,6 +204,8 @@ int main()
     }
 
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    pthread_cancel(threadId);
     pthread_exit(NULL);
+
     return 0;
 }

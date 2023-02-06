@@ -13,3 +13,4 @@ void push(Pedido *s, char ingrediente);
 char pop(Pedido *s);
 void popAll(Pedido *s);
 void printStack(Pedido *s);
+int isEmptyStack(Pedido *s);

@@ -129,7 +129,7 @@ int main()
 
     int wrongOrders = 0;
     int percentage = 0;
-    int numOfOrders = 6;
+    const int numOfOrders = 6;
     char ingredient = ' ';
 
     tcgetattr(STDIN_FILENO, &oldt);
@@ -166,7 +166,7 @@ int main()
     pthread_create(&threadId, NULL, timeout_thread, (void *)arg_struct);
 
     // main game loop
-    while (move != q)
+    while (move != 'q')
     {
         // check if player lost
         if (wrongOrders == MAX_WRONG_ORDERS)
@@ -216,9 +216,9 @@ int main()
         if (ingredient != ' ' && ingredient != 'o' && ingredient != '@')
             push(p, ingredient);
 
-        printStack(p);                     // prints current ingredients
         printPatience(points, percentage); // prints patience bar and points
         printQueue(q);                     // prints current orders
+        printStack(p);                     // prints current ingredients
 
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         move = getchar(); // get next move

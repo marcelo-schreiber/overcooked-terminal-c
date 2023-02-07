@@ -13,12 +13,12 @@ void printPatience(int points, int percentage)
 
   printf(" | "); // Separator
 
-  if (patience > 66)
+  if (patience > 50)
   {
     green();
     printf(":)");
   }
-  else if (patience > 33)
+  else if (patience > 25)
   {
     yellow();
     printf(":|");
@@ -38,7 +38,10 @@ void printPatience(int points, int percentage)
     if (i < percentage / barLengthMax)
       printf("▓");
     else
+    {
+      darkGray();
       printf("░");
+    }
   }
   printf("|");
   reset();

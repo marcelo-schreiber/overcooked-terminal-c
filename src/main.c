@@ -22,7 +22,7 @@
 #define MAX_WRONG_ORDERS 3
 #define POINTS_PER_ORDER 10
 #define POINTS_PER_WRONG_ORDER 10
-#define MAX_TIME_PER_ORDER 15
+#define MAX_TIME_PER_ORDER 25
 
 // global variables for comunicating between threads
 struct thread_args

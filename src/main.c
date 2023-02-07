@@ -226,7 +226,7 @@ int main()
 
         movePlayer(map, &row, &col, move);
     }
-
+    pthread_cancel(threadId);
     pthread_exit(NULL);
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // restore old settings before quitting
 

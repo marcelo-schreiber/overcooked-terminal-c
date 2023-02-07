@@ -41,7 +41,7 @@ void *timeout_thread(void *arg)
     // get percentage from args
     int *percentage = arg_struct.percentage;
 
-    for (*percentage = 0; *percentage < 100; *percentage += 100 / MAX_TIME_PER_ORDER) // 20 seconds to complete an order
+    for (*percentage = 0; *percentage < 100; *percentage += 100 / MAX_TIME_PER_ORDER) // 100% / 25 = 4%
         sleep(1);
 
     Cliente *q = (Cliente *)arg_struct.q;

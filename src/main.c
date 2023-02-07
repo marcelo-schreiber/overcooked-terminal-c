@@ -166,7 +166,7 @@ int main()
     pthread_create(&threadId, NULL, timeout_thread, (void *)arg_struct);
 
     // main game loop
-    while (1)
+    while (move != q)
     {
         // check if player lost
         if (wrongOrders == MAX_WRONG_ORDERS)

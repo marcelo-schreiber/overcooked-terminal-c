@@ -23,11 +23,10 @@ Caso não tenha instalado as bibliotecas necessárias
 ```bash
   sudo apt update && sudo apt install build-essential
 ```
-Além disso, o ncurses que verifica o tamanho do terminal antes de iniciar
 ```bash
   sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
-
+## Instalação somente com bibliotecas padrão 
 Caso não queira instalar o *ncurses*, o que poderá causar uma interface quebrada quando o terminal estiver pequeno, ao invés de um aviso para redimensioná-lo, clone a branch *no-libs* e siga os mesmo processo:
 
 ```bash

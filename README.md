@@ -31,7 +31,7 @@ Além disso, o ncurses que verifica o tamanho do terminal antes de iniciar
 Caso não queira instalar o *ncurses*, o que poderá causar uma interface quebrada quando o terminal estiver pequeno, ao invés de um aviso para redimensioná-lo, clone a branch *no-libs* e siga os mesmo processo:
 
 ```bash
-  git clone https://github.com/marcelo-schreiber/overcooked-terminal-c.git -b no-libs
+  git clone -b no-libs https://github.com/marcelo-schreiber/overcooked-terminal-c.git
 ```
 ```bash
   cd overcooked-terminal-c && make

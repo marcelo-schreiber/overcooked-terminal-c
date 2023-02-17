@@ -80,7 +80,6 @@ void printStack(Pedido *s)
         temp = temp->next;
     }
     darkGray();
-    printf("\\______/"); // plate
-    printf("\n");
+    printf("\t");
     reset();
 }

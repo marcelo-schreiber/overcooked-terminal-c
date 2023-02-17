@@ -1,5 +1,5 @@
-# Overcooked in terminal
-Overcooked clone made in C to be playable in the terminal.
+# Overcooked no terminal
+Um clone de overcooked feito para ser jogado no terminal, feito em C.
 
 ## Demonstração
 

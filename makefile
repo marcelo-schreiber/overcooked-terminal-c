@@ -18,7 +18,6 @@ CC_FLAGS=-c         \
 				 -finput-charset=UTF-8
  
 LIB_FLAGS=-lm\
-					 -lncurses\
 					 -lpthread\
 
 # Command used at clean target

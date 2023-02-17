@@ -4,7 +4,7 @@
 #include <pthread.h> // printing while getting input
 #include <string.h>  // memset
 #include <math.h>    // sin, cos
-#include <ncurses.h> // get terminal size
+// #include <ncurses.h> // get terminal size
 
 #include "../include/mainmenu.h"
 #include "../include/colors.h"
@@ -12,23 +12,23 @@
 #define MAX_COLS 90
 #define MAX_LINES 35
 
-void checkTerminalSize(void)
-{
-    int h, w;
-    initscr();
-    getmaxyx(stdscr, h, w);
-    endwin();
-    if ((h < MAX_LINES) || (w < MAX_COLS))
-    {
-        fprintf(stderr, "\nSorry.\n");
-        fprintf(stderr, "To play Overcooked in C for console, your console window must be at least %dx%d\n", MAX_COLS, MAX_LINES);
-        fprintf(stderr, "Currently It's %dx%d\n", w, h);
-        red();
-        fprintf(stderr, "Please resize your window/resolution and re-run the game.\n\n");
-        reset();
-        exit(0);
-    }
-}
+// void checkTerminalSize(void)
+// {
+//     int h, w;
+//     initscr();
+//     getmaxyx(stdscr, h, w);
+//     endwin();
+//     if ((h < MAX_LINES) || (w < MAX_COLS))
+//     {
+//         fprintf(stderr, "\nSorry.\n");
+//         fprintf(stderr, "To play Overcooked in C for console, your console window must be at least %dx%d\n", MAX_COLS, MAX_LINES);
+//         fprintf(stderr, "Currently It's %dx%d\n", w, h);
+//         red();
+//         fprintf(stderr, "Please resize your window/resolution and re-run the game.\n\n");
+//         reset();
+//         exit(0);
+//     }
+// }
 
 void printLogo(void)
 {
@@ -101,7 +101,6 @@ char printMainMenu()
     pthread_t thread;
     system("clear");
 
-    checkTerminalSize();
     pthread_create(&thread, NULL, printDonut, &input); // print menu
     input = getchar();                                 // get input in another thread
     pthread_join(thread, NULL);                        // wait for thread to finish with user input
